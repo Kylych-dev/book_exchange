@@ -11,13 +11,15 @@ from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.permissions import AllowAny
 from apps.utils.authenticate_user import get_and_authenticate_user
-
+from django.contrib.auth import logout
+from rest_framework.permissions import AllowAny, IsAuthenticated
 
 class AuthViewSet(viewsets.GenericViewSet):
     permission_classes = [AllowAny,]
     serializer_class = serializers.EmptySerializer
     serializer_classes = {'login': serializers.UserLoginSerializer,
-                          'register': serializers.UserRegisterSerializer}
+                          'register': serializers.UserRegisterSerializer,
+                          'password_change': serializers.PasswordChangeSerializer}
 
     @action(methods=['POST',], detail=False)
     def login(self, request):
@@ -29,9 +31,21 @@ class AuthViewSet(viewsets.GenericViewSet):
 
     @action(methods=['POST', ], detail=False)
     def register(self, request):
+
+
+        # print(request, '------THIS IS REQUEST------')
+        # print(request.data, '------THIS IS REQUEST------')
+        # for i in request.data.items():
+        #     print(i)
+
         serializer = self.get_serializer(data=request.data)
+        print(serializer, '<------- THIS is SERIALIZER')
         serializer.is_valid(raise_exception=True)
-        user = self.perform_create(serializer)
+        print('\\\\\\\\\\\\')
+        print(**serializer.validated_data)
+
+        user = self.perform_create(**serializer.validated_data)
+        print(user, 'THIS IS serializer')
         data = serializers.AuthUserSerializer(user).data
         return Response(data=data, status=status.HTTP_201_CREATED)
 
@@ -43,6 +57,25 @@ class AuthViewSet(viewsets.GenericViewSet):
         password = data.get('password')
         user = user_manager.create_user(email=email, password=password)
         return user
+
+    @action(methods=['POST',], detail=False)
+    def logout(self, request):
+        logout(request)
+        data = {'success': 'Successfully logged out'}
+        return Response(data=data, status=status.HTTP_200_OK)
+
+    @action(methods=['POST'], detail=False, permission_classes=[IsAuthenticated])
+    def password_change(self, request):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        request.user.set_password(serializer.validated_data['new_password'])
+        request.user.save()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+    def get_queryset(self):
+        return None
+
+
     def get_serializer_class(self):
         if not isinstance(self.serializer_classes, dict):
             raise ImproperlyConfigured('serializer_classes should be a dict mapping.')

@@ -36,6 +36,14 @@ class UserRegisterSerializer(serializers.ModelSerializer):
     #     return BaseUserManager.normilize_email(value)
 
     def validate_email(self, data):
+
+        if hasattr(data, 'get'):
+            print(data.get('email'), '***************')
+        else:
+            print('Value is not a dict', '***************')
+
+        print('------>', data, type(data))
+
         email = data.get('email')
         phonenumber = data.get('phone_number')
 
@@ -47,8 +55,20 @@ class UserRegisterSerializer(serializers.ModelSerializer):
         password_validation.validate_password(value)
         return value
 
-class EmptySerializer(serializers.Serializer):
-    pass
+
+class PasswordChangeSerializer(serializers.Serializer):
+    current_password = serializers.CharField(required=True)
+    new_password = serializers.CharField(required=True)
+
+    def validate_current_password(self, value):
+        if not self.context['request'].user.check_password(value):
+            raise serializers.ValidationError('Current password does not match')
+        return value
+
+    def validate_new_password(self, value):
+        password_validation.validate_password(value)
+        return value
+
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -58,5 +78,8 @@ class UserSerializer(serializers.ModelSerializer):
         fields = ('email', 'first_name', 'last_name')
         # fields = '__all__'
         read_only_fields = ('email',)
+
+class EmptySerializer(serializers.Serializer):
+    pass
 
 
