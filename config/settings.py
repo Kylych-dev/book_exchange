@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 from pathlib import Path
+from decouple import config
 import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -24,7 +25,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-8yy52@kbbqh(%m+#g$5q605jf2&yydy(&1b&_=%f#51mdvu#57'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+# DEBUG = True
+DEBUG = int(config('DEBUG', 1))
+DEBUG_DB = int(config('DEBUG_DB', 1))
 
 # ALLOWED_HOSTS = []
 ALLOWED_HOSTS = ['.vercel.app', '127.0.0.1']
@@ -91,12 +94,26 @@ WSGI_APPLICATION = 'config.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+if DEBUG_DB:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
     }
-}
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': config('DB_ENGINE'),
+            'NAME': config('DB_NAME'),
+            'HOST': config('DB_HOST'),
+            'PORT': config('DB_PORT'),
+            'USER': config('DB_USER'),
+            'PASSWORD': config('DB_PASSWORD'),
+            'ATOMIC_REQUESTS': True
+        }
+    }
+
 
 AUTH_USER_MODEL = 'accounts.UserModel'
 AUTH_USER_MODEL_MANAGER = 'accounts.CustomUserManager'
