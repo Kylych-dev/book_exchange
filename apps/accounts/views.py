@@ -13,6 +13,8 @@ from rest_framework.permissions import AllowAny
 from apps.utils.authenticate_user import get_and_authenticate_user
 from django.contrib.auth import logout
 from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.authtoken.models import Token
+
 
 class AuthViewSet(viewsets.GenericViewSet):
     permission_classes = [AllowAny,]
@@ -25,8 +27,19 @@ class AuthViewSet(viewsets.GenericViewSet):
     def login(self, request):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
+        if not serializer.is_valid():
+            return Response({
+                'data': serializer.errors,
+                'message': 'something went wrong'
+            }, status=status.HTTP_400_BAD_REQUEST)
+        response = serializer.get_jwt_token(serializer.data)
+
+        return Response(response)
         user = get_and_authenticate_user(**serializer.validated_data)
+
+
         data = serializers.AuthUserSerializer(user).data
+
         return Response(data=data, status=status.HTTP_200_OK)
 
     @action(methods=['POST', ], detail=False)

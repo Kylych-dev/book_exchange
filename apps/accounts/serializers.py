@@ -4,10 +4,27 @@ from rest_framework import serializers
 from rest_framework.authtoken.models import Token
 from django.contrib.auth import password_validation
 from django.contrib.auth.models import BaseUserManager
+from rest_framework_simplejwt.tokens import RefreshToken
+from django.contrib.auth import authenticate
+
 
 class UserLoginSerializer(serializers.Serializer):
     email = serializers.CharField(max_length=300, required=True)
     password = serializers.CharField(required=True, write_only=True)
+
+    def validate(self, data):
+        if not UserModel.objects.filter(email=data['email'], password=data['password']):
+            raise serializers.ValidationError('account not found')
+        else:
+            raise serializers.ValidationError('account exist')
+        return data
+
+    def get_jwt_token(self, data):
+        user = authenticate(useremail=data['email'], password=data['password'])
+        if not user:
+            return {'message': 'invalid credentials', 'data':{}}
+        refresh = RefreshToken.get_token(user)
+        return {'message': 'login success', 'data': {'token': {'refresh': str(refresh), 'access': str(refresh.access_token)}}}
 
 
 class AuthUserSerializer(serializers.ModelSerializer):

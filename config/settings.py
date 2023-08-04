@@ -26,7 +26,8 @@ SECRET_KEY = 'django-insecure-8yy52@kbbqh(%m+#g$5q605jf2&yydy(&1b&_=%f#51mdvu#57
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+# ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['.vercel.app', '127.0.0.1']
 
 
 # Application definition
@@ -45,12 +46,14 @@ INSTALLED_APPS = [
     'rest_auth.registration',
     'rest_framework.authtoken',
     'rest_framework_simplejwt',
+    'drf_yasg',
 
     'allauth',
     'allauth.account',
 
     # apps
     'apps.accounts.apps.AccountsConfig',
+    'apps.products.apps.ProductsConfig',
 
 ]
 
@@ -69,7 +72,7 @@ ROOT_URLCONF = 'config.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
