@@ -11,6 +11,7 @@ from django.contrib.auth import authenticate
 class UserLoginSerializer(serializers.Serializer):
     email = serializers.CharField(max_length=300, required=True)
     password = serializers.CharField(required=True, write_only=True)
+    print('hello I\'m here in serializer')
 
     def validate(self, data):
         if not UserModel.objects.filter(email=data['email'], password=data['password']):

@@ -25,8 +25,11 @@ class AuthViewSet(viewsets.GenericViewSet):
 
     @action(methods=['POST',], detail=False)
     def login(self, request):
+        print('hello I\'m here')
         serializer = self.get_serializer(data=request.data)
+        print('hello I\'m here 2')
         serializer.is_valid(raise_exception=True)
+        print('hello I\'m here 3')
         if not serializer.is_valid():
             return Response({
                 'data': serializer.errors,
