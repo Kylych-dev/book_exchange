@@ -12,11 +12,11 @@ urlpatterns = router.urls
 urlpatterns.extend(
     [
         # registration
-        path("register/", RegisterView.as_view({"post": "register"}), name="register"),
+        path("register/", RegisterView.as_view(), name="register"),
 
         # login
-        path("login/", UserAuthenticationView.as_view({"post": "login"}), name="login"),
-        path("logout/", UserAuthenticationView.as_view({"post": "logout"}), name="logout"),
+        path("login/", UserAuthenticationView.as_view(), name="login"),
+        path("logout/", UserAuthenticationView.as_view(), name="logout"),
 
         # book
         path("book/", BookModelViewSet.as_view({"get": "list"}), name="book-list"),
