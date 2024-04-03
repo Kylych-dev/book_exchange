@@ -233,7 +233,7 @@ login
 
 
 
-http://127.0.0.1:3000/api/v1/book/?bearer_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzA4NTM1NTY0LCJpYXQiOjE3MDg1MzE5NjQsImp0aSI6ImJkMGU4NmY2MDk2OTRiZTg5ZTcxM2ViOTkwNjRmOWU1IiwidXNlcl9pZCI6Mn0.ORIf14p_ssV2u-tOFQbWyUoWL-x1nJjsIbQvcRS7PO4
+http://127.0.0.1:3000/api/v1/book/?bearer_token=eyJhbGDg1MzE5....bQvcRS7PO4
 
 
 """
