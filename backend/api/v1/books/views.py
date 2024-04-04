@@ -36,7 +36,7 @@ class BookModelViewSet(viewsets.ModelViewSet):
     )
     @action(detail=False, methods=['GET'])
     def list(self, request, *args, **kwargs):
-        logger.info(f'Ошибка', eуxtra={'Exception': {'cool'}, 'Class': f'{self.__class__.__name__}.{self.action}'})
+        logger.info(f'инфо', eуxtra={'Exception': {'cool'}, 'Class': f'{self.__class__.__name__}.{self.action}'})
         serializer = self.serializer_class(self.get_queryset(), many=True)
     
         return Response(serializer.data)
@@ -55,7 +55,7 @@ class BookModelViewSet(viewsets.ModelViewSet):
     )
     @action(detail=True, methods=['POST'])
     def create(self, request, *args, **kwargs):
-        # try:
+        try:
             serializer = self.get_serializer(data=request.data) 
             serializer.is_valid(raise_exception=True)
             serializer.save(owner=self.request.user)
@@ -67,7 +67,7 @@ class BookModelViewSet(viewsets.ModelViewSet):
                 serializer.data,
                 status=status.HTTP_201_CREATED
             )
-        # except Exception as ex:
+        except Exception as ex:
             logger.error(f'Ошибка при создании кроя', extra={'Exception': ex, 'Class': f'{self.__class__.__name__}.{self.action}'})
             return Response(
                 {'Сообщение': str(ex)},
