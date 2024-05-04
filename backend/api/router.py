@@ -3,6 +3,7 @@ from rest_framework.routers import DefaultRouter
 
 from api.auth.views import RegisterView, UserAuthenticationView
 from api.v1.books.views import BookModelViewSet
+from apps.chat.views import lobby
 
 
 router = DefaultRouter(trailing_slash=False)
@@ -13,6 +14,9 @@ urlpatterns.extend(
     [
         # registration
         path("register/", RegisterView.as_view(), name="register"),
+        # chat lobby
+        path("chat/", lobby, name="lobby"),
+
 
         # login
         path("login/", UserAuthenticationView.as_view(), name="login"),
