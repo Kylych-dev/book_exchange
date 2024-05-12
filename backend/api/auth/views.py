@@ -1,8 +1,7 @@
 from django.shortcuts import get_object_or_404
 from rest_framework_simplejwt.tokens import AccessToken, RefreshToken
 from rest_framework_simplejwt.exceptions import AuthenticationFailed, TokenError
-from rest_framework import status, views
-from rest_framework import permissions
+from rest_framework import status, views, permissions
 from rest_framework.response import Response
 
 from drf_yasg.utils import swagger_auto_schema
@@ -11,7 +10,6 @@ from drf_yasg import openapi
 from .serializers import CustomUserSerializer
 from apps.accounts.models import CustomUser
 from utils.customer_logger import logger
-
 
 
 class RegisterView(views.APIView):
@@ -49,9 +47,6 @@ class RegisterView(views.APIView):
                 return Response(data={"error": f"User creation failed: {str(ex)}"}, status=status.HTTP_400_BAD_REQUEST)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
-
 
 
 class UserAuthenticationView(views.APIView):

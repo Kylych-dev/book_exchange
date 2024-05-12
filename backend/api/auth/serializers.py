@@ -2,7 +2,6 @@ from rest_framework import serializers
 from apps.accounts.models import CustomUser
 
 
-
 class CustomUserSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True, required=True)
     password2 = serializers.CharField(write_only=True, required=True)
