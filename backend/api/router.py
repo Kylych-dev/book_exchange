@@ -32,5 +32,8 @@ urlpatterns.extend(
         path("book/create/", BookModelViewSet.as_view({"post": "create"}), name="book-create"),
         path("book/<int:pk>", BookModelViewSet.as_view({"put": "update"}), name="book-update"),
         path("book/<int:pk>/", BookModelViewSet.as_view({"delete": "destroy"}), name="book-delete"),
+
+        # book transfer
+        path("book/<int:pk>/transfer/", BookModelViewSet.as_view({"post": "transfer"}), name="book-transfer"),
     ]
 )

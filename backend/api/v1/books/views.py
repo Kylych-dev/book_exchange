@@ -8,9 +8,16 @@ from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
 from django.http import Http404
 
-from utils.customer_logger import logger
+from utils.customer_logger import log_error, log_warning
 from apps.books.models import Book
+from apps.accounts.models import CustomUser
 from .serializers import BookSerializer
+
+
+'''
+log_error(self, ex)
+log_warning(self, ex)
+'''
 
 
 class BookModelViewSet(viewsets.ModelViewSet):
@@ -36,9 +43,7 @@ class BookModelViewSet(viewsets.ModelViewSet):
     )
     @action(detail=False, methods=['GET'], permission_classes=[permissions.AllowAny])
     def list(self, request, *args, **kwargs):
-        logger.info(f'инфо', eуxtra={'Exception': {'cool'}, 'Class': f'{self.__class__.__name__}.{self.action}'})
         serializer = self.serializer_class(self.get_queryset(), many=True)
-    
         return Response(serializer.data)
 
     @swagger_auto_schema(
@@ -55,32 +60,23 @@ class BookModelViewSet(viewsets.ModelViewSet):
     @action(detail=True, methods=['POST'])
     def create(self, request, *args, **kwargs):
         try:
-
             isbn = request.data.get('isbn')
             if Book.objects.filter(isbn=isbn).exists():
+                log_error(self, 'Книга с таким ISBN уже существует сообщение Лог')
                 return Response(
-                    {'message': 'Книга с таким ISBN уже существует'},
+                    {'message': 'Книга с таким ISBN уже существует ++++'},
                     status=status.HTTP_400_BAD_REQUEST
                 )
-
-            # Убираем поле owner из данных запроса и используем текущего пользователя
-            # request.data['owner'] = self.request.user.pk
-
 
             serializer = self.get_serializer(data=request.data) 
             serializer.is_valid(raise_exception=True)
             serializer.save(owner=self.request.user)
-            # serializer.save()
-
-            logger.info(f'Ошибка', eуxtra={'Exception': {'cool'}, 'Class': f'{self.__class__.__name__}.{self.action}'})
-        
-        
             return Response(
                 serializer.data,
                 status=status.HTTP_201_CREATED
             )
         except Exception as ex:
-            logger.error(f'Ошибка при создании кроя', extra={'Exception': ex, 'Class': f'{self.__class__.__name__}.{self.action}'})
+            log_error(ex)
             return Response(
                 {'Сообщение': str(ex)},
                 status=status.HTTP_400_BAD_REQUEST
@@ -102,7 +98,7 @@ class BookModelViewSet(viewsets.ModelViewSet):
     def udpate(self,request, *args, **kwargs):
         try:
             book = self.get_object()
-            print('it is self.object ----------->',self.get_object())
+            print('it is self.object ----------->', self.get_object())
             serializer = self.serializer_class(book, data=request.data, partial=True)
             if serializer.is_valid:
                 serializer.save()
@@ -110,19 +106,18 @@ class BookModelViewSet(viewsets.ModelViewSet):
                     serializer.date,
                     status=status.HTTP_200_OK
                 )
-            logger.error(f'Ошибка при обновлени кроя', extra={'Exception': {status.HTTP_400_BAD_REQUEST}, 'Class': f'{self.__class__.__name__}.{self.action}'})
             return Response(
                 serializer.errors,
                 status=status.HTTP_400_BAD_REQUEST
             )
         except Http404 as ht:
-            logger.warning(f'Крой не найден', extra={'Exception': ht, 'Class': f'{self.__class__.__name__}.{self.action}'})
+            log_warning(self, ht)
             return Response(
                 {'Сообщение': 'Крой не найден'},
                 status=status.HTTP_404_NOT_FOUND
             )
         except Exception as ex:
-            logger.error(f'Ошибка при обновлении кроя', extra={'Exception': ex, 'Class': f'{self.__class__.__name__}.{self.action}'})
+           # log
             return Response(
                 {'Сообщение': str(ex)},
                 status=status.HTTP_400_BAD_REQUEST
@@ -151,9 +146,56 @@ class BookModelViewSet(viewsets.ModelViewSet):
                 {"message": "Ресурс не найден"},
                 status=status.HTTP_404_NOT_FOUND
             )
-        
 
-    
+
+    @swagger_auto_schema(
+        method='post',
+        operation_description='Передача книги',
+        operation_summary='Передача книги',
+        operation_id='share_book',
+        tags=['Book'],
+        responses={
+            200: openapi.Response(description='OK - Данные успешно получены'),
+            404: openapi.Response(description='Not Found - Ресурс не найден'),
+        },
+    )
+    @action(detail=True, methods=['POST'])
+    def transfer(self, request, *args, **kwargs):
+        try:
+            instance = self.get_object()
+            new_owner_id = request.data.get('new_owner_id')
+
+            if new_owner_id is None:
+                return Response(
+                    {'message': 'Не указан новый владелец'},
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+
+            try:
+                print('new_owner_id ----------->', new_owner_id)
+                new_owner = CustomUser.objects.filter(id=new_owner_id).first()
+            except CustomUser.DoesNotExist:
+                raise Http404('Пользователь не найден')
+
+            instance.owner = new_owner
+            instance.save()
+
+            return Response(
+                {"message": "Книга успешно передана"},
+                status=status.HTTP_200_OK
+            )
+        except Http404:
+            return Response(
+                {"message": "Ресурс не найден"},
+                status=status.HTTP_404_NOT_FOUND
+            )
+        # except Exception as ex:
+        #     log_error(self, ex)
+        #     return Response(
+        #         {"message": str(ex)},
+        #         status=status.HTTP_400_BAD_REQUEST
+        #     )
+        #
     
         
     
