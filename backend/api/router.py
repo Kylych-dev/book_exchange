@@ -1,10 +1,13 @@
 from django.urls import path
 from rest_framework.routers import DefaultRouter
 
-from api.auth.views import RegisterView, UserAuthenticationView
 from api.v1.books.views import BookModelViewSet
 from apps.chat.views import lobby
-
+from api.auth.views import (
+    RegisterView,
+    UserAuthenticationView,
+    GitHubSignInView
+)
 
 router = DefaultRouter(trailing_slash=False)
 
@@ -14,6 +17,8 @@ urlpatterns.extend(
     [
         # registration
         path("register/", RegisterView.as_view(), name="register"),
+        # registration GitHub
+        path("github/", GitHubSignInView.as_view(), name="github-sign-in"),
         # chat lobby
         path("chat/", lobby, name="lobby"),
 

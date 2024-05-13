@@ -3,6 +3,7 @@ from rest_framework import viewsets, status, permissions
 from rest_framework.response import Response
 from rest_framework.exceptions import ValidationError
 
+from django.views.decorators.csrf import csrf_exempt, csrf_protect
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
 from django.http import Http404
@@ -16,12 +17,11 @@ class BookModelViewSet(viewsets.ModelViewSet):
     # queryset = Book.objects.all()
     serializer_class = BookSerializer
     permission_classes = (permissions.IsAuthenticated,)
-
+    # template_name = 'books/book_list.html'
 
     def get_queryset(self):
         user = self.request.user
         return Book.objects.filter(owner=user)
-
 
     @swagger_auto_schema(
         method='get',
@@ -34,13 +34,12 @@ class BookModelViewSet(viewsets.ModelViewSet):
             400: openapi.Response(description='Bad Request'),
         },
     )
-    @action(detail=False, methods=['GET'])
+    @action(detail=False, methods=['GET'], permission_classes=[permissions.AllowAny])
     def list(self, request, *args, **kwargs):
         logger.info(f'инфо', eуxtra={'Exception': {'cool'}, 'Class': f'{self.__class__.__name__}.{self.action}'})
         serializer = self.serializer_class(self.get_queryset(), many=True)
     
         return Response(serializer.data)
-    
 
     @swagger_auto_schema(
         method='post',
@@ -56,10 +55,23 @@ class BookModelViewSet(viewsets.ModelViewSet):
     @action(detail=True, methods=['POST'])
     def create(self, request, *args, **kwargs):
         try:
+
+            isbn = request.data.get('isbn')
+            if Book.objects.filter(isbn=isbn).exists():
+                return Response(
+                    {'message': 'Книга с таким ISBN уже существует'},
+                    status=status.HTTP_400_BAD_REQUEST
+                )
+
+            # Убираем поле owner из данных запроса и используем текущего пользователя
+            # request.data['owner'] = self.request.user.pk
+
+
             serializer = self.get_serializer(data=request.data) 
             serializer.is_valid(raise_exception=True)
             serializer.save(owner=self.request.user)
-            
+            # serializer.save()
+
             logger.info(f'Ошибка', eуxtra={'Exception': {'cool'}, 'Class': f'{self.__class__.__name__}.{self.action}'})
         
         

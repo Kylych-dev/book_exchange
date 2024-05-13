@@ -3,7 +3,7 @@ from apps.books.models import Book
 
 class BookSerializer(serializers.ModelSerializer):
     # Устанавливаем поле owner только для чтения
-    owner = serializers.PrimaryKeyRelatedField(read_only=True)  
+    owner = serializers.PrimaryKeyRelatedField(read_only=True)
 
     class Meta:
         model = Book
@@ -17,8 +17,12 @@ class BookSerializer(serializers.ModelSerializer):
             "genre",
             "rating",
             "image",
-            "owner"
+            "owner",
+            "isbn",
         )
         extra_kwargs = {
-            "image": {"required": False}  # Делаем поле image необязательным
+            "isbn": {"required": True},  # Делаем поле isbn обязательным
+            "image": {"required": False},  # Делаем поле image необязательным
+            # "owner": {"required": True}
         }
+

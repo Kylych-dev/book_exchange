@@ -1,5 +1,30 @@
 from rest_framework import serializers
 from apps.accounts.models import CustomUser
+from .github_outh import GitHubOauth
+from .helpers import register_social_user
+
+
+class GitHubSocialAuthSerializer(serializers.Serializer):
+    code = serializers.CharField()
+
+    def validate(self, code):
+        access_token = GitHubOauth.exchange_code_for_token(code)
+
+        if access_token:
+            user_data = GitHubOauth.get_github_user(access_token)
+
+            full_name = user_data['name']
+            email = user_data['email']
+            names = full_name.split(' ')
+            first_name = names[1]
+            last_name = names[0]
+            provider = 'github'
+        return register_social_user(
+            provider,
+            email,
+            first_name,
+            last_name
+        )
 
 
 class CustomUserSerializer(serializers.ModelSerializer):
@@ -36,3 +61,25 @@ class CustomUserSerializer(serializers.ModelSerializer):
 
     #     return attrs
 
+
+
+'''
+register
+
+{
+    "email": "user1@mail.ru",
+    "first_name": "user1",
+    "last_name": "user1",
+    "password": "qwerty_1993",
+    "password2": "qwerty_1993"
+}
+
+
+
+login
+{
+    "email": "user1@mail.ru",
+    "password": "qwerty_1993"
+}
+
+'''

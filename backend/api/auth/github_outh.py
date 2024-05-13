@@ -11,7 +11,7 @@ class GitHubOauth:
                           'code': code}
         get_access_token = requests.post("https://github.com/login/oauth/access_token", params=params_payload)
         payload = get_access_token.json()
-        token=payload.get('access_token')
+        token = payload.get('access_token')
         return token
 
     @staticmethod
@@ -24,4 +24,3 @@ class GitHubOauth:
         except:
             raise AuthenticationFailed('Invalid token')
 
-        

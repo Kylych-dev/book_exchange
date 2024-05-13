@@ -8,7 +8,8 @@ SECRET_KEY = 'django-insecure-$$tt(5jvbg1c@@jad6maxrjqapl5z&n-ba!yo3-ygvl((*z@g!
 
 DEBUG = True
 
-ALLOWED_HOSTS = []
+
+ALLOWED_HOSTS = ['*']
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -20,6 +21,8 @@ INSTALLED_APPS = [
 
     # libraries
     'rest_framework',
+    'rest_framework_simplejwt',
+    'corsheaders',
 
     # apps
     'apps.accounts',
@@ -36,6 +39,13 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+# CORS_ALLOW_ALL_ORIGINS=True
+# CORS_ALLOW_CREDENTIALS=True
+CSRF_TRUSTED_ORIGINS = [
+    'http://127.0.0.1:8000'
+]
+
 
 ROOT_URLCONF = 'core.urls'
 
@@ -65,6 +75,26 @@ DATABASES = {
     }
 }
 
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+        # 'rest_framework.permissions.IsAdminUser',
+        'rest_framework.authentication.SessionAuthentication',
+    )
+}
+
+SIMPLE_JWT = {
+     'ACCESS_TOKEN_LIFETIME': timedelta(days=1),   # timedelta(minutes=60)
+     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+     'ROTATE_REFRESH_TOKENS': True,
+     'BLACKLIST_AFTER_ROTATION': True
+}
+
+
+GITHUB_CLIENT_ID = config('GITHUB_CLIENT_ID')
+GITHUB_CLIENT_SECRET = config('GITHUB_CLIENT_SECRET')
+SOCIAL_AUTH_PASSWORD = 'jgk348030gjw03'
+
 
 AUTH_USER_MODEL = "accounts.CustomUser"
 
@@ -85,21 +115,4 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
-REST_FRAMEWORK = {
-    'DEFAULT_AUTHENTICATION_CLASSES': (
-        'rest_framework_simplejwt.authentication.JWTAuthentication',
-        # 'rest_framework.permissions.IsAdminUser',
-        'rest_framework.authentication.SessionAuthentication',
-    )
-}
 
-SIMPLE_JWT = {
-     'ACCESS_TOKEN_LIFETIME': timedelta(days=1),   # timedelta(minutes=60)
-     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
-     'ROTATE_REFRESH_TOKENS': True,
-     'BLACKLIST_AFTER_ROTATION': True
-}
-
-
-GITHUB_CLIENT_ID = config('GITHUB_CLIENT_ID')
-GITHUB_CLIENT_SECRET = config('GITHUB_CLIENT_SECRET')
