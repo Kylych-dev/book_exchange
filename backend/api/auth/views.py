@@ -8,7 +8,11 @@ from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
 
 from apps.accounts.models import CustomUser
-from utils.customer_logger import logger
+from utils.customer_logger import (
+    log_error,
+    log_warning
+)
+
 from .serializers import (
     CustomUserSerializer,
     GitHubSocialAuthSerializer
@@ -40,13 +44,13 @@ class RegisterView(views.APIView):
                 user.save()
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
             except Exception as ex:
-                logger.error(
-                    f"Ошибка при создании пользователя: {str(ex)}",
-                    extra={
-                        "Exception": ex,
-                        "Class": f"{self.__class__.__name__}.{self.action}",
-                    },
-                )
+                # logger.error(
+                #     f"Ошибка при создании пользователя: {str(ex)}",
+                #     extra={
+                #         "Exception": ex,
+                #         "Class": f"{self.__class__.__name__}.{self.action}",
+                #     },
+                # )
                 return Response(data={"error": f"User creation failed: {str(ex)}"}, status=status.HTTP_400_BAD_REQUEST)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
