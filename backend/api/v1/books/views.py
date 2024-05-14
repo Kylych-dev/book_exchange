@@ -95,7 +95,7 @@ class BookModelViewSet(viewsets.ModelViewSet):
         },
     )
     @action(detail=True, methods=['PUT'])
-    def udpate(self,request, *args, **kwargs):
+    def udpate(self, request, *args, **kwargs):
         try:
             book = self.get_object()
             print('it is self.object ----------->', self.get_object())
@@ -147,7 +147,6 @@ class BookModelViewSet(viewsets.ModelViewSet):
                 status=status.HTTP_404_NOT_FOUND
             )
 
-
     @swagger_auto_schema(
         method='post',
         operation_description='Передача книги',
@@ -189,15 +188,6 @@ class BookModelViewSet(viewsets.ModelViewSet):
                 {"message": "Ресурс не найден"},
                 status=status.HTTP_404_NOT_FOUND
             )
-        # except Exception as ex:
-        #     log_error(self, ex)
-        #     return Response(
-        #         {"message": str(ex)},
-        #         status=status.HTTP_400_BAD_REQUEST
-        #     )
-        #
-    
-        
     
 
 
