@@ -37,3 +37,14 @@ urlpatterns.extend(
         path("book/<int:pk>/transfer/", BookModelViewSet.as_view({"post": "transfer"}), name="book-transfer"),
     ]
 )
+
+
+'''
+
+Keneshbekov_
+
+matoma44zz
+
+
+
+'''
