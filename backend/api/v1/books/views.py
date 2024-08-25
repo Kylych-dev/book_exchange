@@ -1,17 +1,26 @@
 from rest_framework.decorators import action
-from rest_framework import viewsets, status, permissions
 from rest_framework.response import Response
-from rest_framework.exceptions import ValidationError
+from rest_framework import (
+    viewsets,
+    status,
+    permissions,
+    generics
+)
 
-from django.views.decorators.csrf import csrf_exempt, csrf_protect
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
 from django.http import Http404
 
-from utils.customer_logger import log_error, log_warning
-from apps.books.models import Book
 from apps.accounts.models import CustomUser
 from .serializers import BookSerializer
+from apps.books.models import (
+    Book,
+    Author
+)
+from utils.customer_logger import (
+    log_error,
+    log_warning
+)
 
 
 '''
@@ -76,7 +85,7 @@ class BookModelViewSet(viewsets.ModelViewSet):
                 status=status.HTTP_201_CREATED
             )
         except Exception as ex:
-            log_error(ex)
+            # log_error(ex)
             return Response(
                 {'Сообщение': str(ex)},
                 status=status.HTTP_400_BAD_REQUEST
@@ -190,5 +199,12 @@ class BookModelViewSet(viewsets.ModelViewSet):
             )
     
 
+class BooksByAuthorView(generics.ListAPIView):
+    serializer_class = BookSerializer
 
+    def get_queryset(self):
+        # author_name = self.request.query_params.get('author_name')
+        print('---------')
+        author_id = self.kwargs['author_id']
+        return Book.objects.filter(author_id=author_id)
 
