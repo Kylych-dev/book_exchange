@@ -2,7 +2,7 @@ from django.urls import path
 from rest_framework.routers import DefaultRouter
 
 from apps.chat.views import lobby
-from api.v1.books.views import (
+from api.v2.books.views import (
     BookModelViewSet,
     BooksByAuthorView
 )
@@ -18,15 +18,8 @@ urlpatterns = router.urls
 
 urlpatterns.extend(
     [
-        # registration
         path("register/", RegisterView.as_view(), name="register"),
-        # registration GitHub
-        path("github/", GitHubSignInView.as_view(), name="github-sign-in"),
-        # chat lobby
-        path("chat/", lobby, name="lobby"),
 
-
-        # login
         path("login/", UserAuthenticationView.as_view(), name="login"),
         path("logout/", UserAuthenticationView.as_view(), name="logout"),
 
@@ -38,8 +31,12 @@ urlpatterns.extend(
 
         # book transfer
         path("book/<int:pk>/transfer/", BookModelViewSet.as_view({"post": "transfer"}), name="book-transfer"),
-
         path('book/author/<int:author_id>/', BooksByAuthorView.as_view(), name='book-author'),
+
+
+
+
+
 
     ]
 )

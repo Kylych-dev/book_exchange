@@ -7,8 +7,6 @@ from rest_framework import (
     generics
 )
 
-from drf_yasg.utils import swagger_auto_schema
-from drf_yasg import openapi
 from django.http import Http404
 
 from apps.accounts.models import CustomUser
@@ -35,6 +33,9 @@ class BookModelViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         user = self.request.user
+        print(user, '---------')
+        if user.is_staff:
+            return Book.objects.all()
         return Book.objects.filter(owner=user)
 
     @action(detail=False, methods=['GET'], permission_classes=[permissions.AllowAny])
@@ -50,19 +51,21 @@ class BookModelViewSet(viewsets.ModelViewSet):
                 log_error(self, 'Книга с таким ISBN уже существует сообщение Лог')
                 return Response(
                     {'message': 'Книга с таким ISBN уже существует ++++'},
-                    status=status.HTTP_400_BAD_REQUEST)
-
+                    status=status.HTTP_400_BAD_REQUEST
+                )
             serializer = self.get_serializer(data=request.data) 
             serializer.is_valid(raise_exception=True)
             serializer.save(owner=self.request.user)
             return Response(
                 serializer.data,
-                status=status.HTTP_201_CREATED)
+                status=status.HTTP_201_CREATED
+            )
         except Exception as ex:
             # log_error(ex)
             return Response(
                 {'Сообщение': str(ex)},
-                status=status.HTTP_400_BAD_REQUEST)
+                status=status.HTTP_400_BAD_REQUEST
+)
 
     @action(detail=True, methods=['PUT'])
     def udpate(self, request, *args, **kwargs):
