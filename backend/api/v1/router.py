@@ -43,14 +43,3 @@ urlpatterns.extend(
 
     ]
 )
-
-
-'''
-
-Keneshbekov_
-
-matoma44zz
-
-
-
-'''
