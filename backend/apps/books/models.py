@@ -11,6 +11,7 @@ class Book(models.Model):
     author = models.ForeignKey(to='Author', on_delete=models.CASCADE, related_name='books')
     genre = models.ForeignKey(to='Genre', on_delete=models.CASCADE, related_name='books')
     rating = models.FloatField(verbose_name='Rating')
+    price = models.DecimalField(max_digits=13, decimal_places=2, verbose_name='Price')
     image = models.ImageField(upload_to='book_covers/', verbose_name='Image')
     isbn = models.CharField(max_length=13, unique=True, verbose_name='ISBN')
 
