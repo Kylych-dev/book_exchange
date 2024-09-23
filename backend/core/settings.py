@@ -24,9 +24,12 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
     'corsheaders',
 
+    'drf_yasg',
+
     # apps
     'apps.accounts',
     'apps.books',
+    'apps.school'
     # 'apps.chat'
 ]
 

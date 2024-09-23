@@ -17,11 +17,6 @@ urlpatterns.extend(
     [
         # registration
         path("register/", RegisterView.as_view(), name="register"),
-        # registration GitHub
-        path("github/", GitHubSignInView.as_view(), name="github-sign-in"),
-        # chat lobby
-        path("chat/", lobby, name="lobby"),
-
 
         # login
         path("login/", UserAuthenticationView.as_view(), name="login"),
