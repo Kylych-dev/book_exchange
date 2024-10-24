@@ -9,8 +9,16 @@ from api.v1.books.views import (
 from api.auth.views import (
     RegisterView,
     UserAuthenticationView,
-    GitHubSignInView,
 )
+
+from api.v1.books.views import BookModelViewSet
+
+from api.v1.author.views import (
+    AuthorViewSet,
+    GenreViewSet
+)
+
+
 
 router = DefaultRouter(trailing_slash=False)
 
@@ -20,11 +28,6 @@ urlpatterns.extend(
     [
         # registration
         path("register/", RegisterView.as_view(), name="register"),
-        # registration GitHub
-        path("github/", GitHubSignInView.as_view(), name="github-sign-in"),
-        # chat lobby
-        path("chat/", lobby, name="lobby"),
-
 
         # login
         path("login/", UserAuthenticationView.as_view(), name="login"),
@@ -39,7 +42,11 @@ urlpatterns.extend(
         # book transfer
         path("book/<int:pk>/transfer/", BookModelViewSet.as_view({"post": "transfer"}), name="book-transfer"),
 
-        path('book/author/<int:author_id>/', BooksByAuthorView.as_view(), name='book-author'),
+        # author
+        path("author/", AuthorViewSet.as_view({"get": "list"}), name="author-list"),
 
+        # genre
+        path("genre/", GenreViewSet.as_view({"get": "list"}), name="genre-list"),
+        path('book/author/<int:author_id>/', BooksByAuthorView.as_view(), name='book-author'),
     ]
 )

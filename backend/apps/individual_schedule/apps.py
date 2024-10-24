@@ -1,6 +1,6 @@
 from django.apps import AppConfig
 
 
-class SchoolConfig(AppConfig):
+class IndividualScheduleConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
-    name = 'apps.school'
+    name = 'apps.individual_schedule'

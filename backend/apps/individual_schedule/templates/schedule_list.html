@@ -1,0 +1,27 @@
+<h1>Schedules</h1>
+<ul>
+    {% for schedule in object_list %}
+        <li>{{ schedule.name }}</li>
+    {% empty %}
+        <li>No schedules yet.</li>
+    {% endfor %}
+</ul>
+
+
+
+
+{#<h1>Schedules</h1>#}
+{#<ul>#}
+{#    {% for schedule in object_list %}#}
+{#        <li>#}
+{#            <strong>{{ schedule.name }}</strong>#}
+{#            <ul>#}
+{#                {% for detail in schedule.details.all %}#}
+{#                    <li>{{ detail.week_day }}: {{ detail.status }} ({{ detail.hours }} hrs)</li>#}
+{#                {% endfor %}#}
+{#            </ul>#}
+{#        </li>#}
+{#    {% empty %}#}
+{#        <li>No schedules yet.</li>#}
+{#    {% endfor %}#}
+{#</ul>#}

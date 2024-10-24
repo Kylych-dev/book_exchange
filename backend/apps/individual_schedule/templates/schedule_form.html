@@ -1,0 +1,36 @@
+<!-- schedule_form.html -->
+
+<form method="POST">
+    {% csrf_token %}
+    
+    <!-- Schedule Name -->
+    <div>
+        <label for="id_name">Schedule Name</label>
+        {{ schedule_form.name }}
+    </div>
+
+    <!-- Schedule Details for Each Day -->
+    <h3>Schedule Details</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>Day</th>
+                <th>Status</th>
+                <th>Hours</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for form in detail_forms %}
+            <tr>
+                <td>{{ form.week_day }}</td>
+                <td>{{ form.status }}</td>
+                <td>{{ form.hours }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Submit Button -->
+    <button type="submit">Create Schedule</button>
+
+</form>

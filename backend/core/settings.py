@@ -23,12 +23,17 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
     'corsheaders',
     'rest_framework_simplejwt.token_blacklist',
-    "drf_yasg",
+
+    'drf_yasg',
+    'query_counter',
 
     # apps
     'apps.accounts',
     'apps.books',
+    'apps.school',
+    'apps.individual_schedule'
     # 'apps.chat'
+
 ]
 
 MIDDLEWARE = [
@@ -39,13 +44,35 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'query_counter.middleware.DjangoQueryCounterMiddleware'
 ]
+
+DQC_SLOWEST_COUNT = 5
+DQC_TABULATE_FMT = 'pretty'
+DQC_SLOW_THRESHOLD = 1  # seconds
+DQC_INDENT_SQL = True
+DQC_PYGMENTS_STYLE = 'tango'
+DQC_PRINT_ALL_QUERIES = False
+DQC_COUNT_QTY_MAP = {
+    5: 'green',
+    10: 'white',
+    20: 'yellow',
+    30: 'red',
+}
 
 CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOW_CREDENTIALS = True
+CSRF_COOKIE_SECURE = True
+
 CSRF_TRUSTED_ORIGINS = [
+    'http://127.0.0.1:3000',
+    'http://localhost:3000',
     'http://127.0.0.1:8000'
 ]
+
+# CSRF_TRUSTED_ORIGINS = [
+#     'http://127.0.0.1:8000'
+# ]
 
 
 ROOT_URLCONF = 'core.urls'
@@ -99,6 +126,7 @@ SOCIAL_AUTH_PASSWORD = 'jgk348030gjw03'
 
 AUTH_USER_MODEL = "accounts.CustomUser"
 
+
 AUTH_PASSWORD_VALIDATORS = [
     {'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',},
     {'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',},
@@ -115,5 +143,20 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+
+# var = {
+#     'DQC_SLOWEST_COUNT': 5,
+#     'DQC_TABULATE_FMT': 'pretty',
+#     'DQC_SLOW_THRESHOLD': 1,  # seconds
+#     'DQC_INDENT_SQL': True,
+#     'DQC_PYGMENTS_STYLE': 'tango',
+#     'DQC_PRINT_ALL_QUERIES': False,
+#     'DQC_COUNT_QTY_MAP': {
+#         5: 'green',
+#         10: 'white',
+#         20: 'yellow',
+#         30: 'red',
+#     },
+# }
 
 
