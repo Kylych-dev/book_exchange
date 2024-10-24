@@ -13,6 +13,8 @@ from apps.books.models import Book
 from apps.accounts.models import CustomUser
 from .serializers import BookSerializer
 
+from query_counter.decorators import queries_counter
+
 
 '''
 log_error(self, ex)
@@ -26,10 +28,12 @@ class BookModelViewSet(viewsets.ModelViewSet):
     permission_classes = (permissions.IsAuthenticated,)
     # template_name = 'books/book_list.html'
 
+    @queries_counter
     def get_queryset(self):
         user = self.request.user
         return Book.objects.filter(owner=user)
 
+    @queries_counter
     @swagger_auto_schema(
         method='get',
         operation_description='Список книг',
@@ -46,6 +50,7 @@ class BookModelViewSet(viewsets.ModelViewSet):
         serializer = self.serializer_class(self.get_queryset(), many=True)
         return Response(serializer.data)
 
+    # @queries_counter
     @swagger_auto_schema(
         method='post',
         operation_description='Создание нового элемента книги',

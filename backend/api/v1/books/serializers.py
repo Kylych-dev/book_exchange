@@ -16,6 +16,7 @@ class BookSerializer(serializers.ModelSerializer):
             "author",
             "genre",
             "rating",
+            'price',
             "image",
             "owner",
             "isbn",

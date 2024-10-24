@@ -1,13 +1,20 @@
 from django.urls import path
 from rest_framework.routers import DefaultRouter
 
-from api.v1.books.views import BookModelViewSet
 from apps.chat.views import lobby
 from api.auth.views import (
     RegisterView,
     UserAuthenticationView,
-    GitHubSignInView
 )
+
+from api.v1.books.views import BookModelViewSet
+
+from api.v1.author.views import (
+    AuthorViewSet,
+    GenreSerializer, GenreViewSet
+)
+
+
 
 router = DefaultRouter(trailing_slash=False)
 
@@ -30,5 +37,11 @@ urlpatterns.extend(
 
         # book transfer
         path("book/<int:pk>/transfer/", BookModelViewSet.as_view({"post": "transfer"}), name="book-transfer"),
+
+        # author
+        path("author/", AuthorViewSet.as_view({"get": "list"}), name="author-list"),
+
+        # genre
+        path("genre/", GenreViewSet.as_view({"get": "list"}), name="genre-list"),
     ]
 )

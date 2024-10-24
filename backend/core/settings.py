@@ -25,6 +25,7 @@ INSTALLED_APPS = [
     'corsheaders',
 
     'drf_yasg',
+    'query_counter',
 
     # apps
     'apps.accounts',
@@ -32,27 +33,42 @@ INSTALLED_APPS = [
     'apps.school',
     'apps.individual_schedule'
     # 'apps.chat'
+
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
-    # 'django.middleware.csrf.CsrfViewMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'query_counter.middleware.DjangoQueryCounterMiddleware'
 ]
 
-# CORS_ALLOW_ALL_ORIGINS = True
-# CORS_ALLOW_CREDENTIALS = True
-# CSRF_COOKIE_SECURE = True
+DQC_SLOWEST_COUNT = 5
+DQC_TABULATE_FMT = 'pretty'
+DQC_SLOW_THRESHOLD = 1  # seconds
+DQC_INDENT_SQL = True
+DQC_PYGMENTS_STYLE = 'tango'
+DQC_PRINT_ALL_QUERIES = False
+DQC_COUNT_QTY_MAP = {
+    5: 'green',
+    10: 'white',
+    20: 'yellow',
+    30: 'red',
+}
 
-# CSRF_TRUSTED_ORIGINS = [
-#     'http://127.0.0.1:3000',
-#     'http://localhost:3000',
-#     'http://127.0.0.1:8000'
-# ]
+CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_CREDENTIALS = True
+CSRF_COOKIE_SECURE = True
+
+CSRF_TRUSTED_ORIGINS = [
+    'http://127.0.0.1:3000',
+    'http://localhost:3000',
+    'http://127.0.0.1:8000'
+]
 
 # CSRF_TRUSTED_ORIGINS = [
 #     'http://127.0.0.1:8000'
@@ -127,5 +143,20 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+
+# var = {
+#     'DQC_SLOWEST_COUNT': 5,
+#     'DQC_TABULATE_FMT': 'pretty',
+#     'DQC_SLOW_THRESHOLD': 1,  # seconds
+#     'DQC_INDENT_SQL': True,
+#     'DQC_PYGMENTS_STYLE': 'tango',
+#     'DQC_PRINT_ALL_QUERIES': False,
+#     'DQC_COUNT_QTY_MAP': {
+#         5: 'green',
+#         10: 'white',
+#         20: 'yellow',
+#         30: 'red',
+#     },
+# }
 
 
