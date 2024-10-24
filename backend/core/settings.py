@@ -8,7 +8,6 @@ SECRET_KEY = 'django-insecure-$$tt(5jvbg1c@@jad6maxrjqapl5z&n-ba!yo3-ygvl((*z@g!
 
 DEBUG = True
 
-
 ALLOWED_HOSTS = ['*']
 
 INSTALLED_APPS = [
@@ -23,6 +22,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework_simplejwt',
     'corsheaders',
+    'rest_framework_simplejwt.token_blacklist',
 
     'drf_yasg',
     'query_counter',
