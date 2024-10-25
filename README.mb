@@ -1,0 +1,49 @@
+
+
+обычный юзер
+{
+	"email": "user@mail.ru",
+	"password": "1"
+}
+
+onwers = [
+    CustomUser(
+    email=f'user{i}@mail.ru',
+    first_name=f'{i} name',
+    password=i
+    )
+    for i in range(10)
+]
+
+CustomUser.objects.bulk_create(onwers)
+
+authors = [
+    Author(name='Author 1'),
+    Author(name='Author 2'),
+    Author(name='Author 3')
+]
+Author.objects.bulk_create(authors)
+
+genre = [
+    Genre(name='Genre 1'),
+    Genre(name='Genre 2'),
+    Genre(name='Genre 3'),
+]
+Genre.objects.bulk_create(genre)
+
+books = [
+    Book(
+            title=f'Book {i}',
+            description=f'Description for Book {i}',
+            public_date=date(2023, random.randint(1,12), random.randint(1,28)),
+            page=random.randint(100,500),
+            owner=random.choice(onwers),
+            author=random.choice(authors),
+            genre=random.choice(genres),
+            rating=round(random.uniform(1,5),2),
+            price=round(random.uniform(10,50),2),
+            isbn=f'978-3-16-1484{i:02d}'
+)
+for i in range(100)
+]
+Book.objects.bulk_create(books)
