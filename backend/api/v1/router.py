@@ -37,7 +37,7 @@ urlpatterns.extend(
         path("book/", BookModelViewSet.as_view({"get": "list"}), name="book-list"),
         path("book/create/", BookModelViewSet.as_view({"post": "create"}), name="book-create"),
 
-        path("book/<int:pk>", BookModelViewSet.as_view(
+        path("book/<int:pk>/", BookModelViewSet.as_view(
             {
                 'put': 'update',
                 'get': 'retrieve',

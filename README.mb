@@ -6,15 +6,16 @@
 	"password": "1"
 }
 
-onwers = [
-    CustomUser(
-    email=f'user{i}@mail.ru',
-    first_name=f'{i} name',
-    password=i
+onwers = []
+for i in range(10):
+    user = CustomUser(
+        email=f'user{i}@mail.ru',
+        first_name=f'{i} name',
     )
-    for i in range(10)
-]
+    user.set_password(str(i))  # Устанавливаем захэшированный пароль
+    onwers.append(user)
 
+# Сохраняем всех пользователей в базе данных
 CustomUser.objects.bulk_create(onwers)
 
 authors = [
@@ -23,14 +24,12 @@ authors = [
     Author(name='Author 3')
 ]
 Author.objects.bulk_create(authors)
-
 genre = [
     Genre(name='Genre 1'),
     Genre(name='Genre 2'),
     Genre(name='Genre 3'),
 ]
 Genre.objects.bulk_create(genre)
-
 books = [
     Book(
             title=f'Book {i}',
