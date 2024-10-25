@@ -54,10 +54,21 @@ class BookModelViewSet(viewsets.ModelViewSet):
             400: openapi.Response(description='Bad Request'),
         },
     )
-    @action(detail=False, methods=['GET'], permission_classes=[permissions.AllowAny])
+    @action(detail=False, methods=['GET'])
     def list(self, request, *args, **kwargs):
-        serializer = self.serializer_class(self.get_queryset(), many=True)
+        queryset = Book.objects.all()
+        serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
+        # serializer = self.serializer_class(self.get_queryset(), many=True)
+        # return Response(serializer.data)
+
+    @action(detail=False, methods=['GET'])
+    def retrieve(self, request, *args, **kwargs):
+        instance = self.get_object()
+        self.check_object_permissions(self.request, instance)
+        serializer = self.get_serializer(instance)
+        return Response(serializer.data)
+
 
     # @queries_counter
     @swagger_auto_schema(
