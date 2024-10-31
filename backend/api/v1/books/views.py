@@ -69,6 +69,14 @@ class BookModelViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(instance)
         return Response(serializer.data)
 
+    @queries_counter
+    @action(detail=False, methods=['GET'], url_path='my-books')
+    def my_books(self, request, *args, **kwargs):
+        user = request.user
+        queryset = Book.objects.filter(owner=user)
+        print('>>>>>>>>', queryset.values())
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
 
     # @queries_counter
     @swagger_auto_schema(

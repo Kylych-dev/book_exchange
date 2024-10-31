@@ -35,6 +35,7 @@ urlpatterns.extend(
 
         # book
         path("book/", BookModelViewSet.as_view({"get": "list"}), name="book-list"),
+        path('book/my-books/', BookModelViewSet.as_view({"get": "my_books"}), name="my-books"),
         path("book/create/", BookModelViewSet.as_view({"post": "create"}), name="book-create"),
 
         path("book/<int:pk>/", BookModelViewSet.as_view(
@@ -47,9 +48,6 @@ urlpatterns.extend(
              name="book-detail"
         ),
 
-        # path("book/<int:pk>", BookModelViewSet.as_view({"put": "update"}), name="book-update"),
-        # path("book/<int:pk>/", BookModelViewSet.as_view({"delete": "destroy"}), name="book-delete"),
-
         # book transfer
         path("book/<int:pk>/transfer/", BookModelViewSet.as_view({"post": "transfer"}), name="book-transfer"),
 
@@ -59,5 +57,10 @@ urlpatterns.extend(
         # genre
         path("genre/", GenreViewSet.as_view({"get": "list"}), name="genre-list"),
         path('book/author/<int:author_id>/', BooksByAuthorView.as_view(), name='book-author'),
+
+
+        # products
+
+
     ]
 )

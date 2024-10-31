@@ -44,7 +44,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'query_counter.middleware.DjangoQueryCounterMiddleware'
+    'query_counter.middleware.DjangoQueryCounterMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
 ]
 
 DQC_SLOWEST_COUNT = 5
